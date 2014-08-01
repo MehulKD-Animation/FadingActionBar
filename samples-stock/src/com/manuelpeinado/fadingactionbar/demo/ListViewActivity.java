@@ -25,30 +25,41 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import com.manuelpeinado.fadingactionbar.BeautifulFadingActionBarHelper;
 import com.manuelpeinado.fadingactionbar.FadingActionBarHelper;
-
 public class ListViewActivity extends Activity {
     private ArrayAdapter<String> adapter;
-
+    private BeautifulFadingActionBarHelper mBeautifulFadingActionBarHelper;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        FadingActionBarHelper helper = new FadingActionBarHelper()
-            .actionBarBackground(R.drawable.ab_background)
+        mBeautifulFadingActionBarHelper = new BeautifulFadingActionBarHelper()
+            .actionBarShadow(R.drawable.ab_solid_shadow_holo)
+            .actionBarBackground(R.drawable.actionbar_shadow)
             .headerLayout(R.layout.header)
             .contentLayout(R.layout.activity_listview);
-        setContentView(helper.createView(this));
-        helper.initActionBar(this);
+
+        setContentView(mBeautifulFadingActionBarHelper.createView(this));
+        mBeautifulFadingActionBarHelper.initActionBar(this);
 
         ListView listView = (ListView) findViewById(android.R.id.list);
         ArrayList<String> items = loadItems(R.raw.nyc_sites);
         adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, items);
         listView.setAdapter(adapter);
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                mBeautifulFadingActionBarHelper.switchActionBarShadow(!mBeautifulFadingActionBarHelper.isShowActionBarShadow());
+            }
+        });
     }
+
 
     /**
      * @return A list of Strings read from the specified resource

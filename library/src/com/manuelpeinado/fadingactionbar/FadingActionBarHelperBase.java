@@ -301,11 +301,17 @@ public abstract class FadingActionBarHelperBase {
     };
     private int mLastScrollPosition;
 
-    private void onNewScroll(int scrollPosition) {
+    protected void onNewScroll(int scrollPosition) {
         if (isActionBarNull()) {
             return;
         }
+        int newAlpha = getAlpha(scrollPosition);
+        mActionBarBackgroundDrawable.setAlpha(newAlpha);
 
+        addParallaxEffect(scrollPosition);
+    }
+
+    protected int getAlpha(int scrollPosition){
         int currentHeaderHeight = mHeaderContainer.getHeight();
         if (currentHeaderHeight != mLastHeaderHeight) {
             updateHeaderHeight(currentHeaderHeight);
@@ -313,10 +319,7 @@ public abstract class FadingActionBarHelperBase {
 
         int headerHeight = currentHeaderHeight - getActionBarHeight();
         float ratio = (float) Math.min(Math.max(scrollPosition, 0), headerHeight) / headerHeight;
-        int newAlpha = (int) (ratio * 255);
-        mActionBarBackgroundDrawable.setAlpha(newAlpha);
-
-        addParallaxEffect(scrollPosition);
+        return (int) (ratio * 255);
     }
 
     private void addParallaxEffect(int scrollPosition) {
